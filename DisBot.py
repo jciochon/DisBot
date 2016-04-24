@@ -5,33 +5,23 @@ import requests
 
 client = discord.Client()
 
-eight_ball = []
-beths = []
-lenny = []
-flenny = []
-wang = []
-memes = []
 
-
-@client.event
-async def on_ready():
-    print('Logged in as')
-    print(client.user.name)
-    print(client.user.id)
-    print('------')
-
-
+#
+# Helper functions
+#
 def truncate_str(content, length=100, suffix='...'):
     """
     Truncates a string after a certain number of characters.
     Function always tries to truncate on a word boundary.
-    :rtype str
     """
     if len(content) <= length:
         return content
     else:
         return content[:length].rsplit(' ', 1)[0] + suffix
 
+#
+# Bot commands
+#
 
 async def cmd_g(message, gis=False):
     API_KEY = ''
@@ -92,6 +82,31 @@ async def cmd_flenny(message, wand=False):
         await client.send_message(message.channel, random.choice(flens))
 
 
+async def cmd_eightball(message):
+    with open('./8ball_responses.txt') as f:
+        responses = f.readlines()
+    await client.send_message(message.channel, random.choice(responses))
+
+
+async def cmd_bethspoem(message):
+    poem = "@beth, Beauty. Not just in the aesthetic sense. Actual beauty. Beauty that can stop a man dead in his tracks. Beauty that causes one to make a double take. \
+        So deep and wonderful, words cannot describe. To even attempt to describe true beauty, is silly. Fools fall for it left and right. \
+        Knowing no difference between aesthetic looks and actual beauty. The essence of beauty, is so hard to come by. It is so deep, so emotional on scales one cannot fathom. \
+        I met her. Beauty. She was, man, she was something else. Words slip my tongue, as I speak my mind. Sounding like an idiot, a buffoon. She was something, out of this world. \
+        No, universe. Distant, yet right here in front of me. As I talk to her, my voice cracks randomly. She giggles at me, says it\’s cute. \
+        I freeze up, \“Did she just say it’s cute when my voice cracks?\”"
+    await client.send_message(message.channel, poem)
+
+#
+# Client events/Discord stuff
+#
+@client.event
+async def on_ready():
+    print('Logged in as')
+    print(client.user.name)
+    print(client.user.id)
+    print('------')
+
 @client.event
 async def on_message(message):
     if message.content == '.test':
@@ -102,18 +117,27 @@ async def on_message(message):
                 counter += 1
 
         await client.edit_message(tmp, 'You have {} messages.'.format(counter))
+
     elif message.content.startswith('.g ') or message.content.startswith('.gis ') and len(message.content) > 3:
         if message.content.startswith('.gis '):
             await cmd_g(message, True)
         else:
             await cmd_g(message, False)
+
     elif message.content == '.lenny':
         await cmd_lennyface(message)
+
     elif message.content == '.fle' or message.content == '.flen' or message.content == '.flenny' or message.content == '.fatleonard' or message.content == '.flewand':
         if message.content == '.flewand':
             await cmd_flenny(message, True)
         else:
             await cmd_flenny(message, False)
 
+    elif message.content.startswith('.8ball ') or message.content.startswith('.8 '):
+        await cmd_eightball(message)
 
-client.run(user, pass)
+    elif message.content == '.bethspoem':
+        await cmd_bethspoem(message)
+
+
+client.run('user', 'pass')
