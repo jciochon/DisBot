@@ -18,6 +18,20 @@ As of current, most other commands are for doing silly things.
 <User2> Oh my.
 ```
 
-## To do
+## Requirements
+- Discord api
+- asyncio
+- random
+- requests
+
+These can be installed with:
+```
+pip install discord.py
+pip install asyncio
+pip install requests
+```
+The `random` module is part of the standard library.
+
+### To do
 - Fix google image search
 - Add more commands!
