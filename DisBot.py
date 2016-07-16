@@ -24,8 +24,12 @@ def truncate_str(content, length=100, suffix='...'):
 #
 
 async def cmd_g(message, gis=False):
-    API_KEY = ''
-    CX = ''
+    with open('secrets.txt') as s:
+        a = s.readlines()
+    API_KEY = a[0][14:]
+    CZ = a[1][9:]
+    del a
+
     CSE_PREFIX = 'https://www.googleapis.com/customsearch/v1'
 
     if gis:
